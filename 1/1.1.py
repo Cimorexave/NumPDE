@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 def solve_poisson(N, rhs_func):
     h = 1.0 / N
@@ -33,9 +35,16 @@ print("------------- b -----------\n")
 
 def f_b(x): return 2*x**2 + 3*x - 4/3
 def exact_b(x): return -1/6*x**4 - 1/2*x**3 + 2/3*x**2
+errors_b = []
 
 for N in [4, 8, 16, 32]:
     x, u_num = solve_poisson(N, f_b)
     u_exact = exact_b(x)
     error = np.max(np.abs(u_exact - u_num))
+    errors_b.append(error)
     print(f"N = {N} | Max Nodal Error: {error:.2e}")
+
+plt.plot([4, 8, 16, 32], errors_b)
+plt.xlabel("N")
+plt.ylabel("Error: u_exact - u_num")
+plt.show()
