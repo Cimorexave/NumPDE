@@ -5,7 +5,7 @@ import scipy.sparse.linalg as spla
 from scipy.special import eval_legendre
 
 # ---------------------------------------------------------
-# 1. Basis Functions on Reference Element [-1, 1]
+# [-1, 1]
 # ---------------------------------------------------------
 def phi(k, xi):
     """Evaluates the k-th basis function at reference coordinate xi."""
@@ -29,7 +29,7 @@ def dphi(k, xi):
         return eval_legendre(k-1, xi)
 
 # ---------------------------------------------------------
-# 2. Main FEM Solver Function
+# FEM Solver
 # ---------------------------------------------------------
 def solve_fem_1d(p, N):
     """
@@ -58,9 +58,6 @@ def solve_fem_1d(p, N):
     phi_vals = np.array([phi(k, xi_q) for k in range(p + 1)])
     dphi_vals = np.array([dphi(k, xi_q) for k in range(p + 1)])
     
-    # ---------------------------------------------------------
-    # Assembly Loop
-    # ---------------------------------------------------------
     for e in range(N):
         a, b = x_nodes[e], x_nodes[e+1]
         
@@ -94,7 +91,7 @@ def solve_fem_1d(p, N):
     U = spla.spsolve(A.tocsr(), F)
     
     # ---------------------------------------------------------
-    # Error Evaluation (Energy Norm)
+    # Error 
     # ---------------------------------------------------------
     # True solution u(x) = sin(x) -> u'(x) = cos(x)
     xi_err, w_err = np.polynomial.legendre.leggauss(15) # High degree for accurate error
@@ -125,7 +122,6 @@ def solve_fem_1d(p, N):
     return h, np.sqrt(error_energy_sq)
 
 # ---------------------------------------------------------
-# 3. Execution and Plotting
 # ---------------------------------------------------------
 if __name__ == "__main__":
     polynomial_degrees = [1, 2, 3]
